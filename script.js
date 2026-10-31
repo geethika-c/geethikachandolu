@@ -19,3 +19,18 @@ themeButton.addEventListener('click',()=>setTheme(!document.body.classList.conta
 const shell=document.getElementById('terminal-form');const output=document.getElementById('play-output');const terminalInput=document.getElementById('terminal-command');
 const commands={help:'Available commands: help, about, projects, skills, awards, surprise, clear',about:'Geethika Chandolu | high school senior | curious about technology, business, data, and design.',projects:'HeartLens · AgriGuard · MoodMuse · All Set · Care Across America · #TogetherWeThrive · TaxTalk',skills:'Python · Java · HTML/CSS/JS · Swift · machine learning · data analysis · product design',awards:'FBLA 2nd nationally · AgriGuard Best Overall + Marketing + Presentation · HeartLens Best Finance',surprise:'✳ You found the Easter egg! Here is your reminder: good ideas get better when you build them. ♡'};
 shell.addEventListener('submit',e=>{e.preventDefault();const command=terminalInput.value.trim().toLowerCase().replace(/;$/,'');if(!command)return;if(command==='clear'){output.textContent='';}else{let response=commands[command];if(!response&&/^select\s+\*\s+from\s+\w+$/.test(command)){const name=command.split(' ').pop();response=commands[name]||'No table named '+name+'. Try help.';}output.textContent+='\ngeethika@web:~$ '+command+'\n'+(response||'Command not found. Try help.')+'\n';}terminalInput.value='';output.scrollTop=output.scrollHeight;});
+
+// Initial visit only: animate a short progress bar, then reveal the site.
+(function(){
+ const overlay=document.getElementById('site-loader');
+ if(!overlay)return;
+ const fill=document.getElementById('loader-fill'),pct=document.getElementById('loader-percent'),message=document.getElementById('loader-message');
+ let timer=null,done=false;
+ const finish=()=>{if(done)return;done=true;if(timer)clearInterval(timer);fill.style.width='100%';pct.textContent='100%';message.textContent='Ready to explore!';setTimeout(()=>{overlay.classList.add('is-done');setTimeout(()=>overlay.remove(),600)},170);try{sessionStorage.setItem('geethika-studio-intro','seen')}catch(e){}};
+ document.getElementById('skip-loader').addEventListener('click',finish);
+ let seen=false;try{seen=sessionStorage.getItem('geethika-studio-intro')==='seen'}catch(e){}
+ if(seen||window.matchMedia('(prefers-reduced-motion: reduce)').matches){overlay.remove();return;}
+ let progress=0;
+ const messages=['Preparing a little creativity...','Loading projects and ideas...','Connecting all the little details...','Almost there...'];
+ timer=setInterval(()=>{progress=Math.min(100,progress+Math.max(1,Math.round((100-progress)/17)));fill.style.width=progress+'%';pct.textContent=progress+'%';message.textContent=messages[Math.min(3,Math.floor(progress/26))];if(progress>=100)finish()},45);
+})();
